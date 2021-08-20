@@ -1,6 +1,7 @@
 ﻿using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -9,9 +10,9 @@ namespace WebApplication1.DB
     public class DBClient
     {
         //连接符字串
-        private static string connectionString = null;
+        private static string _ConnectionString = null;
         //数据库类型
-        private static int dbType = 0;
+        private static int? _DbType = null;
 
         private SqlSugarClient GetInstance()
         {
@@ -19,9 +20,9 @@ namespace WebApplication1.DB
             SqlSugarClient db = new SqlSugarClient(new ConnectionConfig()
             {
                 //连接符字串
-                ConnectionString = "server=127.0.0.1;Password=1234;User ID=sa;database=Text",
+                ConnectionString = _ConnectionString,
                 //数据库类型
-                DbType = DbType.SqlServer,
+                DbType = (DbType)_DbType.Value,
                 //自动释放和关闭数据库连接，如果有事务事务结束时关闭，否则每次操作后关闭
                 IsAutoCloseConnection = true
             });
@@ -34,8 +35,43 @@ namespace WebApplication1.DB
             return db;
         }
 
-        
-
-
+        /// <summary>
+        /// 读取数据库连接字符串
+        /// </summary>
+        public static string ConnectionString
+        {
+            get
+            {
+                if (_ConnectionString == null)
+                {
+                    _ConnectionString = ConfigurationManager.AppSettings["sqlConnectionString"].ToString();
+                    if (string.IsNullOrEmpty(_ConnectionString))
+                    {
+                        throw new Exception("数据库连接字符串错误！！！");
+                    }
+                }
+                return _ConnectionString;
+            }
+        }
+        /// <summary>
+        /// 读取数据库连接数据类型
+        /// </summary>
+        public static int? dbType
+        {
+            get
+            {
+                if (_DbType == null)
+                {
+                    int _dbtype;
+                    bool isInt = int.TryParse(ConfigurationManager.AppSettings["DbType"].ToString(), out _dbtype);
+                    if (!isInt)
+                    {
+                        throw new Exception("数据库类型错误！！！");
+                    }
+                    _DbType = _dbtype;
+                }
+                return _DbType;
+            }
+        }
     }
 }
