@@ -14,15 +14,15 @@ namespace WebApplication1.DB
         //数据库类型
         private static int? _DbType = null;
 
-        private SqlSugarClient GetInstance()
+        public static SqlSugarClient GetInstance()
         {
             //创建数据库对象
             SqlSugarClient db = new SqlSugarClient(new ConnectionConfig()
             {
                 //连接符字串
-                ConnectionString = _ConnectionString,
+                ConnectionString = ConnectionString,
                 //数据库类型
-                DbType = (DbType)_DbType.Value,
+                DbType = (DbType)dbType.Value,
                 //自动释放和关闭数据库连接，如果有事务事务结束时关闭，否则每次操作后关闭
                 IsAutoCloseConnection = true
             });
