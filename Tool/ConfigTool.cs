@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Web;
 
 namespace WebApplication1.Tool
 {
@@ -21,7 +19,6 @@ namespace WebApplication1.Tool
 
         public static Dictionary<string, string> ConfigDict
         {
-
             get
             {
                 if (_ConfigDict == null)
@@ -34,7 +31,6 @@ namespace WebApplication1.Tool
                 }
                 return _ConfigDict;
             }
-
         }
 
         /// <summary>
