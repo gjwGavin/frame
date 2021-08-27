@@ -155,6 +155,7 @@
     <Compile Include="Common\ActionTool.cs" />
     <Compile Include="Common\Besa\ParamBesa.cs" />
     <Compile Include="Common\Controllers\ErrorController.cs" />
+    <Compile Include="Common\Enum\CommEnum.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DB\DBClient.cs" />
