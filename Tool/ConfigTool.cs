@@ -13,7 +13,8 @@ namespace WebApplication1.Tool
         {
             sqlConnectionString = 0,
             DbType = 1,
-            TokenTime = 2
+            TokenTime = 2,
+            TokenField = 3
         }
 
 

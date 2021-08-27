@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Mvc;
 using WebApplication1.Aop;
+using WebApplication1.Common.Base;
 
 namespace WebApplication1.Controllers
 {
@@ -13,10 +14,22 @@ namespace WebApplication1.Controllers
     public class ValuesController : Controller
     {
         
-        public string Get(string name) {
+        public GetRes Get(string name) {
 
+            throw new Exception();
+            return new GetRes()
+            {
+                MyProperty = 1,
+                Value = "返回值"
 
-            return "value";
+            };
+        }
+
+        public class GetRes: ParamBesa
+        {
+            public string Value { get; set; }
+            public int MyProperty { get; set; }
+
         }
     }
 }
