@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace WebApplication1.Common.Base
 {
@@ -15,6 +16,6 @@ namespace WebApplication1.Common.Base
         /// <summary>
         /// 执行是否成功
         /// </summary>
-        public bool Successful { set; get; } = true;
+        public bool Successful { set; get; } = true;     
     }
 }

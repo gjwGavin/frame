@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         
         public GetRes Get(string name) {
 
-            throw new Exception();
+            throw new Exception("2222");
             return new GetRes()
             {
                 MyProperty = 1,
