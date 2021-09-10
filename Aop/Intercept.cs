@@ -42,8 +42,8 @@ namespace WebApplication1.Aop
 
             if (filterContext.Exception != null)
             {
-               // string LogFilePath(string LogEvent) => $@"{AppContext.BaseDirectory}Logs\{LogEvent}\log.log";
-               // string SerilogOutputTemplate = "{NewLine}{NewLine}Date：{Timestamp:yyyy-MM-dd HH:mm:ss.fff}{NewLine}LogLevel：{Level}{NewLine}Message：{Message}{NewLine}{Exception}" + new string('-', 50);
+                 string LogFilePath(string LogEvent) => $@"{AppContext.BaseDirectory}Logs\{LogEvent}\log.log";
+                 string SerilogOutputTemplate = "{NewLine}{NewLine}Date：{Timestamp:yyyy-MM-dd HH:mm:ss.fff}{NewLine}LogLevel：{Level}{NewLine}Message：{Message}{NewLine}{Exception}" + new string('-', 50);
 
                // Log.Logger = new LoggerConfiguration()
                //.Enrich.FromLogContext()
@@ -54,11 +54,18 @@ namespace WebApplication1.Aop
                //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Error).WriteTo.File(LogFilePath("Error"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
                //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Fatal).WriteTo.File(LogFilePath("Fatal"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
                //.CreateLogger();
+
+
                 string controllName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
                 string actionName = filterContext.ActionDescriptor.ActionName;
+
+               // Log.Debug("111");
+
+
+
                // filterContext.HttpContext.Request;
-                SeriLogTool.Information(string.Format(controllName+ "/"+actionName+"111"));
-                SeriLogTool.Error(string.Format(controllName + "/" + actionName)+ filterContext.Exception.Message+"222");
+               // SeriLogTool.Information(string.Format(controllName+ "/"+actionName+"111"));
+                SeriLogTool.Debug(string.Format(controllName + "/" + actionName)+ filterContext.Exception.Message+"222");
 
 
             }
