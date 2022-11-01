@@ -15,7 +15,7 @@ namespace WebApplication1
         {
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);  //在Global.asax的Application_Start方法中GlobalFilters注册
             RouteConfig.RegisterRoutes(RouteTable.Routes);
           
         }

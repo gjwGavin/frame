@@ -150,6 +150,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aop\HandleError.cs" />
     <Compile Include="Aop\Intercept.cs" />
     <Compile Include="Aop\ToParam.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
