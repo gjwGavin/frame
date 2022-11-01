@@ -71,7 +71,17 @@ namespace WebApplication1.Aop.Tool
             return token;
         }
 
-
+        public static Dictionary<string, object> Validate(string token)
+        {
+            IJsonSerializer serializer = new JsonNetSerializer();
+            IDateTimeProvider provider = new UtcDateTimeProvider();
+            IJwtValidator validator = new JwtValidator(serializer, provider);
+            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
+            IJwtAlgorithm alg = new HMACSHA256Algorithm();
+            IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, alg);
+            var json = decoder.Decode(token);
+            return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+        }
 
 
         /// <summary>
