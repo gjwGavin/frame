@@ -17,58 +17,56 @@ using WebApplication1.Tool;
 namespace WebApplication1.Aop
 {
     public class Intercept : ActionFilterAttribute
-    {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+    {/// <summary>
+     /// 自定义AuthorizeAttribute过滤
+     /// </summary>
+        public class Intercept : ActionFilterAttribute
         {
-            string controllName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
-            string actionName = filterContext.ActionDescriptor.ActionName;
-            //过滤请求            
-            //不需要过滤的请求
-            if (controllName.Equals("Login") && actionName.Equals("Login")) return;
-            //进行过滤拦截验证
-            //验证Token
-            var tokenstr = filterContext.HttpContext.Request.Headers[ConfigTool.GetConfigValue(ConfigTool.ConfigField.TokenField)];
-            string message;
-            TokenTool.ValidateJwtToken(tokenstr, TokenTool.TokenKey, out message);
-            //if (!message.Equals("good")) throw new Exception(message);
-            //if (!message.Equals("good")) filterContext.Result = new RedirectToRouteResult("Default", new RouteValueDictionary(new { controller = "Error", action = "notToken" }));
-
-
-
-        }
-
-        public override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-
-            if (filterContext.Exception != null)
+            public override void OnActionExecuting(ActionExecutingContext filterContext)
             {
-                 string LogFilePath(string LogEvent) => $@"{AppContext.BaseDirectory}Logs\{LogEvent}\log.log";
-                 string SerilogOutputTemplate = "{NewLine}{NewLine}Date：{Timestamp:yyyy-MM-dd HH:mm:ss.fff}{NewLine}LogLevel：{Level}{NewLine}Message：{Message}{NewLine}{Exception}" + new string('-', 50);
-
-               // Log.Logger = new LoggerConfiguration()
-               //.Enrich.FromLogContext()
-               //.MinimumLevel.Debug() // 所有Sink的最小记录级别
-               //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Debug).WriteTo.File(LogFilePath("Debug"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
-               //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Information).WriteTo.File(LogFilePath("Information"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
-               //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Warning).WriteTo.File(LogFilePath("Warning"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
-               //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Error).WriteTo.File(LogFilePath("Error"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
-               //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Fatal).WriteTo.File(LogFilePath("Fatal"), rollingInterval: RollingInterval.Day, outputTemplate: SerilogOutputTemplate))
-               //.CreateLogger();
-
-
                 string controllName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
                 string actionName = filterContext.ActionDescriptor.ActionName;
+                SeriLogTool.Debug($"{controllName}/{actionName}    参数： {JsonConvert.SerializeObject(filterContext.ActionParameters)}");
+                //过滤请求            
+                //不需要过滤的请求
+                if (ActionList.IsNotAction(controllName, actionName)) return;
 
-               // Log.Debug("111");
+                //进行过滤拦截验证
+                //验证Token
+                var tokenstr = filterContext.HttpContext.Request.Headers[ConfigTool.GetConfigValue(ConfigTool.ConfigField.TokenField)];
+                string message;
+                TokenTool.ValidateJwtToken(tokenstr, TokenTool.TokenKey, out message);
+                //if (!message.Equals("good")) throw new Exception(message);
+                //if (!message.Equals("good")) filterContext.Result = new RedirectToRouteResult("Default", new RouteValueDictionary(new { controller = "Error", action = "notToken" }));
 
-
-
-               // filterContext.HttpContext.Request;
-               // SeriLogTool.Information(string.Format(controllName+ "/"+actionName+"111"));
-                SeriLogTool.Debug(string.Format(controllName + "/" + actionName)+ filterContext.Exception.Message+"222");
 
 
             }
+
+            public override void OnActionExecuted(ActionExecutedContext filterContext)
+            {
+                string controllName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+                string actionName = filterContext.ActionDescriptor.ActionName;
+                if (!ActionList.IsNotAction(controllName, actionName))
+                {
+                    //解析前端验证过的token 然后修改生命周期 再返回给前端 保证Token不失效
+                    var token = filterContext.HttpContext.Request.Headers[ConfigTool.GetConfigValue(ConfigTool.ConfigField.TokenField)];
+                    var TokenInfo = TokenTool.Validate(token);
+                    var Newtoken = TokenTool.SaveHeader(new TokenTool.TokenInfo() { UserID = TokenInfo["UserID"].ToString(), UserName = TokenInfo["UserName"].ToString() });
+                    filterContext.HttpContext.Response.AddHeader("Token", Newtoken);
+                }
+                //记录日志
+                var StatusCode = filterContext.HttpContext.Response.StatusCode;
+                if (filterContext.Exception != null)
+                {
+                    SeriLogTool.Error($"{controllName}/{actionName}出现了错误 错误码 {StatusCode} 错误信息: {filterContext.Exception.Message} \r\n {filterContext.Exception.StackTrace}");
+                }
+
+
+
+
+            }
+
 
 
         }

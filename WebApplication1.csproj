@@ -167,6 +167,7 @@
     </Compile>
     <Compile Include="Models\Table.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tool\ActionList.cs" />
     <Compile Include="Tool\ConfigTool.cs" />
     <Compile Include="Tool\SeriLogTool.cs" />
     <Compile Include="Tool\TokenTool.cs" />
