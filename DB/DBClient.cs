@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using WebApplication1.Tool;
 
 namespace WebApplication1.DB
 {
@@ -30,7 +31,8 @@ namespace WebApplication1.DB
             //添加Sql打印事件，开发中可以删掉这个代码
             db.Aop.OnLogExecuting = (sql, pars) =>
             {
-                Console.WriteLine(sql);
+                SeriLogTool.Debug(sql);
+                //Console.WriteLine(sql);
             };
             return db;
         }

@@ -3,6 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -10,7 +11,7 @@ namespace WebApplication1.Tool
 {
     public class SeriLogTool
     {
-
+        public static bool IsLog = !string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["ISLogs"]) ? bool.Parse(ConfigurationManager.AppSettings["ISLogs"]) : false;
         public static string LogFilePath(string LogEvent) => $@"{AppContext.BaseDirectory}Logs\{LogEvent}\log.log";
         public static string SerilogOutputTemplate = "{NewLine}{NewLine}日期：{Timestamp:yyyy-MM-dd HH:mm:ss.fff}{NewLine}日志级别：{Level}{NewLine}信息：{Message}{NewLine}{Exception}" + new string('-', 50);
 
@@ -26,23 +27,23 @@ namespace WebApplication1.Tool
 
         public static void Debug(string message)
         {
-            logger.Debug(message);
+            if (IsLog) logger.Debug(message);
         }
         public static void Information(string message)
-        {         
-            logger.Information(message);
+        {
+            if (IsLog) logger.Information(message);
         }
         public static void Warning(string message)
-        {          
-            logger.Warning(message);
+        {
+            if (IsLog) logger.Warning(message);
         }
         public static void Error(string message)
         {
-            logger.Error(message);
+            if (IsLog) logger.Error(message);
         }
         public static void Fatal(string message)
         {
-            logger.Fatal(message);
+            if (IsLog) logger.Fatal(message);
         }
 
 

@@ -19,7 +19,10 @@ namespace WebApplication1.Tool
                 if (_list == null)
                 {
                     _list = new List<KeyValuePair>();
-                    _list.Add(new KeyValuePair() { Key = "Login", Value = "Login" });
+                    _list.Add(new KeyValuePair() { Key = "Login", Value = "WebLogin" });
+                    _list.Add(new KeyValuePair() { Key = "Error", Value = "notLogin" });
+                    _list.Add(new KeyValuePair() { Key = "Error", Value = "notToken" });
+                    _list.Add(new KeyValuePair() { Key = "Login", Value = "Logout" });
                 }
                 return _list;
             }

@@ -37,7 +37,10 @@ namespace WebApplication1.Aop
             string message;
             TokenTool.ValidateJwtToken(tokenstr, TokenTool.TokenKey, out message);
             //if (!message.Equals("good")) throw new Exception(message);
-            //if (!message.Equals("good")) filterContext.Result = new RedirectToRouteResult("Default", new RouteValueDictionary(new { controller = "Error", action = "notToken" }));
+            if (!message.Equals("good"))
+            {
+                filterContext.Result = new RedirectToRouteResult("Default", new RouteValueDictionary(new { controller = "Error", action = "notToken" }));
+            }
 
 
 
@@ -52,8 +55,10 @@ namespace WebApplication1.Aop
                 //解析前端验证过的token 然后修改生命周期 再返回给前端 保证Token不失效
                 var token = filterContext.HttpContext.Request.Headers[ConfigTool.GetConfigValue(ConfigTool.ConfigField.TokenField)];
                 var TokenInfo = TokenTool.Validate(token);
-                var Newtoken = TokenTool.SaveHeader(new TokenTool.TokenInfo() { UserID = TokenInfo["UserID"].ToString(), UserName = TokenInfo["UserName"].ToString() });
-                filterContext.HttpContext.Response.AddHeader("Token", Newtoken);
+                var Newtoken = TokenTool.SaveHeader(new TokenTool.TokenInfo() { UserID = TokenInfo["UserId"].ToString() });
+                filterContext.HttpContext.Response.AddHeader(ConfigTool.GetConfigValue(ConfigTool.ConfigField.TokenField), Newtoken);
+                filterContext.HttpContext.Response.AddHeader("Access-Control-Expose-Headers", ConfigTool.GetConfigValue(ConfigTool.ConfigField.TokenField));
+
             }
             //记录日志
             var StatusCode = filterContext.HttpContext.Response.StatusCode;
@@ -61,7 +66,6 @@ namespace WebApplication1.Aop
             {
                 SeriLogTool.Error($"{controllName}/{actionName}出现了错误 错误码 {StatusCode} 错误信息: {filterContext.Exception.Message} \r\n {filterContext.Exception.StackTrace}");
             }
-
 
 
 

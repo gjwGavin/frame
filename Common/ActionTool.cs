@@ -6,6 +6,7 @@ using WebApplication1.Common.Base;
 using Newtonsoft.Json;
 using static WebApplication1.Common.Enum.CommEnum;
 using System.Reflection;
+using System.Configuration;
 
 namespace WebApplication1.Common
 {
@@ -17,8 +18,18 @@ namespace WebApplication1.Common
         /// </summary>
         /// <param name="ErrorString"></param>
         /// <returns></returns>
-        public static string ToParamBesa(string ErrorString) {
-            return  JsonConvert.SerializeObject(new ParamBesa() { Successful = false,Message = ErrorString});
+        public static string ToParamBesa(string ErrorString)
+        {
+            return JsonConvert.SerializeObject(new BesaBO() { code = 50012, Successful = false, message = ErrorString });
+        }
+        /// <summary>
+        /// 获取配置项
+        /// </summary>
+        /// <param name="AppSettings">key</param>
+        /// <returns></returns>
+        public static string GetAppSettings(string AppSettings)
+        {
+            return ConfigurationManager.AppSettings[AppSettings].ToString();
         }
         /// <summary>
         /// 根据某一字段对list对象 进行排序

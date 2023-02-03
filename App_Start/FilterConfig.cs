@@ -6,6 +6,10 @@ namespace WebApplication1
 {
     public class FilterConfig
     {
+        /// <summary>
+        /// http://t.zoukankan.com/tuqunfu-p-15630134.html
+        /// </summary>
+        /// <param name="filters"></param>
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new Intercept());

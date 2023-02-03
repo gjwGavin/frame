@@ -36,14 +36,6 @@ namespace WebApplication1.Aop.Tool
             /// </summary>
             public string jti { set; get; } = Guid.NewGuid().ToString();
             /// <summary>
-            /// 用户名
-            /// </summary>          
-            public string UserName { set; get; }
-            /// <summary>
-            /// 用户权限
-            /// </summary>
-            public string UserRole { set; get; }
-            /// <summary>
             /// 用户ID
             /// </summary>
             public string UserID { set; get; }
@@ -63,25 +55,13 @@ namespace WebApplication1.Aop.Tool
             //拼接header头
             payload.Add("exp", exp);    //expire 指定token的生命周期。unix时间戳格式
             payload.Add("iat", DateTime.Now.ToString()); //发布时间
-            payload.Add("UserName", t.UserName);  //用户信息
-            payload.Add("UserRole", t.UserRole);
             payload.Add("UserId", t.UserID);
             //创建Token
             string token = CreateJwtToken(payload, TokenKey);
             return token;
         }
 
-        public static Dictionary<string, object> Validate(string token)
-        {
-            IJsonSerializer serializer = new JsonNetSerializer();
-            IDateTimeProvider provider = new UtcDateTimeProvider();
-            IJwtValidator validator = new JwtValidator(serializer, provider);
-            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-            IJwtAlgorithm alg = new HMACSHA256Algorithm();
-            IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, alg);
-            var json = decoder.Decode(token);
-            return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-        }
+
 
 
         /// <summary>
@@ -113,6 +93,19 @@ namespace WebApplication1.Aop.Tool
             var json = decoder.Decode(token, secret, true);
             IDictionary<string, object> dic = JsonConvert.DeserializeObject<IDictionary<string, object>>(json);
             return dic;
+        }
+
+
+        public static Dictionary<string, object> Validate(string token)
+        {
+            IJsonSerializer serializer = new JsonNetSerializer();
+            IDateTimeProvider provider = new UtcDateTimeProvider();
+            IJwtValidator validator = new JwtValidator(serializer, provider);
+            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
+            IJwtAlgorithm alg = new HMACSHA256Algorithm();
+            IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, alg);
+            var json = decoder.Decode(token);
+            return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
         }
 
 

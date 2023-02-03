@@ -25,7 +25,7 @@ namespace WebApplication1.Controllers
             };
         }
 
-        public class GetRes: ParamBesa
+        public class GetRes: BesaBO
         {
             public string Value { get; set; }
             public int MyProperty { get; set; }
